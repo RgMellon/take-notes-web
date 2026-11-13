@@ -10,7 +10,6 @@ function Mermaid({ code }: { code: string }) {
 
   useEffect(() => {
     let active = true;
-    setError(false);
     import('mermaid').then(async ({ default: mermaid }) => {
       mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: 'dark' });
       const result = await mermaid.render(`diagram${id}`, code);
