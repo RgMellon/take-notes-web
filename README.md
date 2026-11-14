@@ -8,11 +8,18 @@ Você escreve notas enquanto lê, clica em gerar, e a IA produz documentos `.md`
 
 ## Screenshots
 
-![](prints/Captura%20de%20Tela%202026-11-14%20às%2007.54.19.png)
-![](prints/Captura%20de%20Tela%202026-11-14%20às%2007.54.32.png)
-![](prints/Captura%20de%20Tela%202026-11-14%20às%2007.55.01.png)
-![](prints/Captura%20de%20Tela%202026-11-14%20às%2007.55.42.png)
-![](prints/Captura%20de%20Tela%202026-11-14%20às%2007.55.58.png)
+<table>
+  <tr>
+    <td><img src="prints/Captura%20de%20Tela%202026-11-14%20às%2007.54.19.png" width="300"/></td>
+    <td><img src="prints/Captura%20de%20Tela%202026-11-14%20às%2007.54.32.png" width="300"/></td>
+    <td><img src="prints/Captura%20de%20Tela%202026-11-14%20às%2007.55.01.png" width="300"/></td>
+  </tr>
+  <tr>
+    <td><img src="prints/Captura%20de%20Tela%202026-11-14%20às%2007.55.42.png" width="300"/></td>
+    <td><img src="prints/Captura%20de%20Tela%202026-11-14%20às%2007.55.58.png" width="300"/></td>
+    <td></td>
+  </tr>
+</table>
 
 ---
 
