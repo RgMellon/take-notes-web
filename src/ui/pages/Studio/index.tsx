@@ -1,10 +1,11 @@
-import { ArrowLeft, BookOpen, ChevronRight, FileText, Sparkles } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronRight, FileText, GitFork, Sparkles } from 'lucide-react';
 import { Button } from '@/ui/components/ui/button';
 import { Sidebar } from './components/Sidebar';
 import { ChapterHeader } from './components/ChapterHeader';
 import { NoteEditor } from './components/NoteEditor';
 import { GenerationBar } from './components/GenerationBar';
 import { StructuredViewer } from './components/StructuredViewer';
+import { FlowEditor } from './components/FlowEditor';
 import { useStudioController } from './useStudioController';
 
 export function Studio() {
@@ -20,6 +21,8 @@ export function Studio() {
     isCreating,
     isUpdating,
     isGenerating,
+    isUpdatingStructured,
+    handleUpdateStructured,
     handleAddChapter,
     handleUpdateTitle,
     handleSaveNote,
@@ -84,6 +87,13 @@ export function Studio() {
                 </Button>
                 <Button
                   variant="ghost"
+                  className={`mode-tab ${mode === 'flow' ? 'active' : ''}`}
+                  onClick={() => setMode('flow')}
+                >
+                  <GitFork className="size-3.5" />Diagrama
+                </Button>
+                <Button
+                  variant="ghost"
                   className={`mode-tab ${mode === 'result' ? 'active' : ''}`}
                   onClick={() => setMode('result')}
                 >
@@ -111,12 +121,16 @@ export function Studio() {
               </>
             )}
 
+            {mode === 'flow' && <FlowEditor />}
+
             {mode === 'result' && (
               <StructuredViewer
                 markdown={structured?.markdownContent}
                 chapterId={currentChapterId}
                 onRegenerate={handleGenerate}
+                onSave={handleUpdateStructured}
                 isGenerating={isGenerating}
+                isSaving={isUpdatingStructured}
                 hasNote={!!note?.content?.trim()}
               />
             )}

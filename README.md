@@ -72,7 +72,8 @@ src/
 │   │   │   ├── useUpdateChapter.ts
 │   │   │   ├── useDeleteChapter.ts
 │   │   │   ├── useUpsertNote.ts
-│   │   │   └── useGenerateStructured.ts
+│   │   │   ├── useGenerateStructured.ts
+│   │   │   └── useUpdateStructured.ts
 │   │   └── query/              # Hooks de leitura (GET)
 │   │       ├── useBooks.ts
 │   │       ├── useChapters.ts

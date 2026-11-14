@@ -9,13 +9,14 @@ import { useCreateChapter } from '@/app/hooks/mutations/useCreateChapter';
 import { useUpdateChapter } from '@/app/hooks/mutations/useUpdateChapter';
 import { useUpsertNote } from '@/app/hooks/mutations/useUpsertNote';
 import { useGenerateStructured } from '@/app/hooks/mutations/useGenerateStructured';
+import { useUpdateStructured } from '@/app/hooks/mutations/useUpdateStructured';
 import type { NoteEditorHandle } from './components/NoteEditor';
 
 export function useStudioController() {
   const { bookId = '' } = useParams<{ bookId: string }>();
   const navigate = useNavigate();
   const [selectedChapterId, setSelectedChapterId] = useState<string | null>(null);
-  const [mode, setMode] = useState<'notes' | 'result'>('notes');
+  const [mode, setMode] = useState<'notes' | 'flow' | 'result'>('notes');
   const noteEditorRef = useRef<NoteEditorHandle>(null);
 
   const { chapters, isLoading: isLoadingChapters } = useChapters(bookId);
@@ -30,6 +31,7 @@ export function useStudioController() {
   const { updateChapter, isLoading: isUpdating } = useUpdateChapter(bookId);
   const { upsertNote } = useUpsertNote(currentChapterId);
   const { generate, isLoading: isGenerating } = useGenerateStructured(bookId, currentChapterId);
+  const { updateStructured, isLoading: isUpdatingStructured } = useUpdateStructured(currentChapterId);
 
   async function handleAddChapter() {
     try {
@@ -57,6 +59,15 @@ export function useStudioController() {
       await upsertNote({ content });
     } catch {
       toast.error('Erro ao salvar nota.');
+    }
+  }
+
+  async function handleUpdateStructured(markdownContent: string) {
+    try {
+      await updateStructured({ markdownContent });
+      toast.success('Markdown salvo.');
+    } catch {
+      toast.error('Erro ao salvar Markdown.');
     }
   }
 
@@ -88,6 +99,8 @@ export function useStudioController() {
     isCreating,
     isUpdating,
     isGenerating,
+    isUpdatingStructured,
+    handleUpdateStructured,
     handleAddChapter,
     handleUpdateTitle,
     handleSaveNote,

@@ -11,7 +11,9 @@ interface StructuredViewerProps {
   markdown: string | undefined;
   chapterId: string;
   onRegenerate: () => void;
+  onSave: (markdown: string) => void;
   isGenerating: boolean;
+  isSaving: boolean;
   hasNote: boolean;
 }
 
@@ -28,13 +30,16 @@ function saveDownload(blob: Blob, name: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export function StructuredViewer({ markdown, chapterId, onRegenerate, isGenerating, hasNote }: StructuredViewerProps) {
+export function StructuredViewer({ markdown, chapterId, onRegenerate, onSave, isGenerating, isSaving, hasNote }: StructuredViewerProps) {
   const [view, setView] = useState<View>('split');
+  const [draft, setDraft] = useState(markdown ?? '');
+
+  const isDirty = draft !== (markdown ?? '');
 
   async function handleCopy() {
-    if (!markdown) return;
+    if (!draft) return;
     try {
-      await navigator.clipboard.writeText(markdown);
+      await navigator.clipboard.writeText(draft);
       toast.success('Markdown copiado.');
     } catch {
       toast.error('Não foi possível copiar.');
@@ -42,8 +47,8 @@ export function StructuredViewer({ markdown, chapterId, onRegenerate, isGenerati
   }
 
   function handleDownload() {
-    if (!markdown) return;
-    saveDownload(new Blob([markdown], { type: 'text/markdown;charset=utf-8' }), 'chapter.md');
+    if (!draft) return;
+    saveDownload(new Blob([draft], { type: 'text/markdown;charset=utf-8' }), 'chapter.md');
   }
 
   return (
@@ -69,14 +74,14 @@ export function StructuredViewer({ markdown, chapterId, onRegenerate, isGenerati
       </div>
 
       <div className={cn('result-panels', view !== 'split' && 'single')}>
-        {view !== 'raw' && (
+            {view !== 'raw' && (
           <div className="result-pane">
             <div className="editor-toolbar">
               <span className="toolbar-label"><Eye size={13} />Preview</span>
               <span className="text-muted-foreground text-[10px]">Visualização</span>
             </div>
-            {markdown
-              ? <div className="result-content"><MarkdownPreview markdown={markdown} storageKey={chapterId} /></div>
+            {draft
+              ? <div className="result-content"><MarkdownPreview markdown={draft} storageKey={chapterId} /></div>
               : <div className="empty-result">
                   <BookOpen strokeWidth={1} />
                   <span>Seu conhecimento começa com uma nota.</span>
@@ -92,16 +97,16 @@ export function StructuredViewer({ markdown, chapterId, onRegenerate, isGenerati
                 <Code2 size={13} />Markdown <span className="font-mono text-muted-foreground text-[9px]">.md</span>
               </span>
               <div className="flex gap-1">
-                <Button variant="ghost" size="icon" className="size-6" disabled={!markdown} onClick={handleCopy} aria-label="Copiar MD">
+                <Button variant="ghost" size="icon" className="size-6" disabled={!draft} onClick={handleCopy} aria-label="Copiar MD">
                   <Copy className="size-3" />
                 </Button>
-                <Button variant="ghost" size="icon" className="size-6" disabled={!markdown} onClick={handleDownload} aria-label="Baixar .md">
+                <Button variant="ghost" size="icon" className="size-6" disabled={!draft} onClick={handleDownload} aria-label="Baixar .md">
                   <Download className="size-3" />
                 </Button>
               </div>
             </div>
-            {markdown
-              ? <div className="result-content"><pre className="raw-markdown">{markdown}</pre></div>
+            {draft
+              ? <div className="result-content"><textarea className="raw-markdown w-full resize-none bg-transparent outline-none" style={{ height: 560 }} value={draft} onChange={e => setDraft(e.target.value)} /></div>
               : <div className="empty-result">
                   <Code2 strokeWidth={1} />
                   <span>Markdown pronto para sua base de conhecimento.</span>
@@ -111,7 +116,10 @@ export function StructuredViewer({ markdown, chapterId, onRegenerate, isGenerati
         )}
       </div>
 
-      <div className="flex justify-end mt-4">
+      <div className="flex justify-between mt-4">
+        <Button variant="outline" onClick={() => onSave(draft)} disabled={!isDirty || isSaving}>
+          {isSaving ? 'Salvando…' : 'Salvar edições'}
+        </Button>
         <Button onClick={onRegenerate} disabled={isGenerating || !hasNote}>
           <Sparkles />
           {isGenerating ? 'Gerando…' : 'Gerar novamente'}
