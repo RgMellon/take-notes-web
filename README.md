@@ -6,6 +6,16 @@ Você escreve notas enquanto lê, clica em gerar, e a IA produz documentos `.md`
 
 ---
 
+## Screenshots
+
+![](prints/Captura%20de%20Tela%202026-11-14%20às%2007.54.19.png)
+![](prints/Captura%20de%20Tela%202026-11-14%20às%2007.54.32.png)
+![](prints/Captura%20de%20Tela%202026-11-14%20às%2007.55.01.png)
+![](prints/Captura%20de%20Tela%202026-11-14%20às%2007.55.42.png)
+![](prints/Captura%20de%20Tela%202026-11-14%20às%2007.55.58.png)
+
+---
+
 ## Stack
 
 | Camada | Tecnologia |
