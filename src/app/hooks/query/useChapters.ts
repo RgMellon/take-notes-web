@@ -8,5 +8,5 @@ export function useChapters(bookId: string) {
     enabled: !!bookId,
   });
 
-  return { chapters: data?.chapters ?? [], isLoading, refetch };
+  return { chapters: data ?? [], isLoading, refetch };
 }

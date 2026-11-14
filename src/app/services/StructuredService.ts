@@ -14,5 +14,5 @@ export class StructuredService extends Service {
 }
 
 export namespace StructuredService {
-  export type StructuredResponse = { structured: Structured };
+  export type StructuredResponse = Structured;
 }

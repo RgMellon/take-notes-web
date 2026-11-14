@@ -7,13 +7,14 @@ export class NoteService extends Service {
     return data;
   }
 
-  static async upsertNote(chapterId: string, payload: NoteService.UpsertPayload): Promise<NoteService.NoteResponse> {
-    const { data } = await this.client.put<NoteService.NoteResponse>(`/chapters/${chapterId}/note`, payload);
+  static async upsertNote(chapterId: string, payload: NoteService.UpsertPayload): Promise<NoteService.UpsertResponse> {
+    const { data } = await this.client.put<NoteService.UpsertResponse>(`/chapters/${chapterId}/note`, payload);
     return data;
   }
 }
 
 export namespace NoteService {
-  export type NoteResponse = { note: Note };
+  export type NoteResponse = Note;
   export type UpsertPayload = { content: string };
+  export type UpsertResponse = Note;
 }

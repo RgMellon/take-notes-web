@@ -2,6 +2,7 @@ import { Layers, Plus } from 'lucide-react';
 import { Button } from '@/ui/components/ui/button';
 import { BookCard } from './components/BookCard';
 import { CreateBookModal } from './components/CreateBookModal';
+import { DeleteBookModal } from './components/DeleteBookModal';
 import { useBooksController } from './useBooksController';
 
 export function Books() {
@@ -12,9 +13,12 @@ export function Books() {
     isDeleting,
     modalOpen,
     setModalOpen,
+    bookToDelete,
+    setBookToDelete,
     handleOpen,
     handleCreate,
-    handleDelete,
+    handleDeleteRequest,
+    handleDeleteConfirm,
   } = useBooksController();
 
   return (
@@ -50,7 +54,7 @@ export function Books() {
             key={book.id}
             book={book}
             onOpen={handleOpen}
-            onDelete={handleDelete}
+            onDelete={handleDeleteRequest}
             isDeleting={isDeleting}
           />
         ))}
@@ -61,6 +65,15 @@ export function Books() {
           onClose={() => setModalOpen(false)}
           onSubmit={handleCreate}
           isLoading={isCreating}
+        />
+      )}
+
+      {bookToDelete && (
+        <DeleteBookModal
+          bookTitle={bookToDelete.title}
+          isLoading={isDeleting}
+          onConfirm={handleDeleteConfirm}
+          onClose={() => setBookToDelete(null)}
         />
       )}
     </div>

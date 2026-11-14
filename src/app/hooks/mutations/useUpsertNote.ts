@@ -7,8 +7,9 @@ export function useUpsertNote(chapterId: string) {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (payload: NoteService.UpsertPayload) =>
       NoteService.upsertNote(chapterId, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['note', chapterId] });
+    onSuccess: (data) => {
+      console.log('[upsertNote] onSuccess data:', data);
+      queryClient.setQueryData(['note', chapterId], data);
     },
   });
 

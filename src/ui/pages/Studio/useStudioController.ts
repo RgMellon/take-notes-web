@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
 import { useChapters } from '@/app/hooks/query/useChapters';
 import { useNote } from '@/app/hooks/query/useNote';
@@ -8,12 +9,14 @@ import { useCreateChapter } from '@/app/hooks/mutations/useCreateChapter';
 import { useUpdateChapter } from '@/app/hooks/mutations/useUpdateChapter';
 import { useUpsertNote } from '@/app/hooks/mutations/useUpsertNote';
 import { useGenerateStructured } from '@/app/hooks/mutations/useGenerateStructured';
+import type { NoteEditorHandle } from './components/NoteEditor';
 
 export function useStudioController() {
   const { bookId = '' } = useParams<{ bookId: string }>();
   const navigate = useNavigate();
   const [selectedChapterId, setSelectedChapterId] = useState<string | null>(null);
   const [mode, setMode] = useState<'notes' | 'result'>('notes');
+  const noteEditorRef = useRef<NoteEditorHandle>(null);
 
   const { chapters, isLoading: isLoadingChapters } = useChapters(bookId);
 
@@ -21,7 +24,7 @@ export function useStudioController() {
   const currentChapter = chapters.find(c => c.id === currentChapterId) ?? null;
 
   const { note } = useNote(currentChapterId);
-  const { structured } = useStructured(currentChapterId);
+  const { structured } = useStructured(currentChapterId, currentChapter?.status === 'STRUCTURED');
 
   const { createChapter, isLoading: isCreating } = useCreateChapter(bookId);
   const { updateChapter, isLoading: isUpdating } = useUpdateChapter(bookId);
@@ -31,11 +34,12 @@ export function useStudioController() {
   async function handleAddChapter() {
     try {
       const nextNumber = Math.max(0, ...chapters.map(c => c.number)) + 1;
-      const { chapter } = await createChapter({ number: nextNumber, title: `Capítulo ${nextNumber}` });
+      const chapter = await createChapter({ number: nextNumber, title: `Capítulo ${nextNumber}` });
       setSelectedChapterId(chapter.id);
       setMode('notes');
-    } catch {
-      toast.error('Erro ao criar capítulo.');
+    } catch (err) {
+      const message = isAxiosError(err) ? err.response?.data?.message : null;
+      toast.error(message ?? 'Erro ao criar capítulo.');
     }
   }
 
@@ -66,7 +70,8 @@ export function useStudioController() {
     }
   }
 
-  function handleBack() {
+  async function handleBack() {
+    await noteEditorRef.current?.flushSave();
     navigate('/');
   }
 
@@ -89,5 +94,6 @@ export function useStudioController() {
     handleGenerate,
     handleBack,
     handleSelectChapter: setSelectedChapterId,
+    noteEditorRef,
   };
 }

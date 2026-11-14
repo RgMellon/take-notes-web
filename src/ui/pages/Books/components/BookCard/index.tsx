@@ -5,7 +5,7 @@ import { Button } from '@/ui/components/ui/button';
 interface BookCardProps {
   book: Book;
   onOpen: (id: string) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: string, title: string) => void;
   isDeleting: boolean;
 }
 
@@ -24,7 +24,7 @@ export function BookCard({ book, onOpen, onDelete, isDeleting }: BookCardProps) 
         size="icon"
         className="book-card-delete"
         disabled={isDeleting}
-        onClick={() => onDelete(book.id)}
+        onClick={() => onDelete(book.id, book.title)}
         aria-label="Deletar livro"
       >
         <Trash2 className="size-4" />

@@ -9,6 +9,7 @@ import type { BookService } from '@/app/services/BookService';
 export function useBooksController() {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const [bookToDelete, setBookToDelete] = useState<{ id: string; title: string } | null>(null);
 
   const { books, isLoading } = useBooks();
   const { createBook, isLoading: isCreating } = useCreateBook();
@@ -20,17 +21,25 @@ export function useBooksController() {
 
   async function handleCreate(payload: BookService.CreatePayload) {
     try {
-      await createBook(payload);
+      const { book } = await createBook(payload);
       toast.success('Livro criado!');
+      setModalOpen(false);
+      navigate(`/books/${book.id}`);
     } catch {
       toast.error('Erro ao criar livro.');
     }
   }
 
-  async function handleDelete(id: string) {
+  function handleDeleteRequest(id: string, title: string) {
+    setBookToDelete({ id, title });
+  }
+
+  async function handleDeleteConfirm() {
+    if (!bookToDelete) return;
     try {
-      await deleteBook(id);
+      await deleteBook(bookToDelete.id);
       toast.success('Livro removido.');
+      setBookToDelete(null);
     } catch {
       toast.error('Erro ao remover livro.');
     }
@@ -43,8 +52,11 @@ export function useBooksController() {
     isDeleting,
     modalOpen,
     setModalOpen,
+    bookToDelete,
+    setBookToDelete,
     handleOpen,
     handleCreate,
-    handleDelete,
+    handleDeleteRequest,
+    handleDeleteConfirm,
   };
 }

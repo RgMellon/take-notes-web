@@ -2,23 +2,23 @@ import type { Chapter } from '@/app/types/Chapter';
 import { Service } from './Service';
 
 export class ChapterService extends Service {
-  static async getChapters(bookId: string): Promise<ChapterService.ChaptersResponse> {
-    const { data } = await this.client.get<ChapterService.ChaptersResponse>(`/books/${bookId}/chapters`);
+  static async getChapters(bookId: string): Promise<Chapter[]> {
+    const { data } = await this.client.get<Chapter[]>(`/books/${bookId}/chapters`);
     return data;
   }
 
-  static async getChapterById(bookId: string, id: string): Promise<ChapterService.ChapterResponse> {
-    const { data } = await this.client.get<ChapterService.ChapterResponse>(`/books/${bookId}/chapters/${id}`);
+  static async getChapterById(bookId: string, id: string): Promise<Chapter> {
+    const { data } = await this.client.get<Chapter>(`/books/${bookId}/chapters/${id}`);
     return data;
   }
 
-  static async createChapter(bookId: string, payload: ChapterService.CreatePayload): Promise<ChapterService.ChapterResponse> {
-    const { data } = await this.client.post<ChapterService.ChapterResponse>(`/books/${bookId}/chapters`, payload);
+  static async createChapter(bookId: string, payload: ChapterService.CreatePayload): Promise<Chapter> {
+    const { data } = await this.client.post<Chapter>(`/books/${bookId}/chapters`, payload);
     return data;
   }
 
-  static async updateChapter(bookId: string, id: string, payload: ChapterService.UpdatePayload): Promise<ChapterService.ChapterResponse> {
-    const { data } = await this.client.patch<ChapterService.ChapterResponse>(`/books/${bookId}/chapters/${id}`, payload);
+  static async updateChapter(bookId: string, id: string, payload: ChapterService.UpdatePayload): Promise<Chapter> {
+    const { data } = await this.client.patch<Chapter>(`/books/${bookId}/chapters/${id}`, payload);
     return data;
   }
 
@@ -28,8 +28,6 @@ export class ChapterService extends Service {
 }
 
 export namespace ChapterService {
-  export type ChaptersResponse = { chapters: Chapter[] };
-  export type ChapterResponse = { chapter: Chapter };
   export type CreatePayload = { number: number; title: string };
   export type UpdatePayload = { number?: number; title?: string; tags?: string[] };
 }

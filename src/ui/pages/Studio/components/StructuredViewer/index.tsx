@@ -9,6 +9,7 @@ type View = 'preview' | 'split' | 'raw';
 
 interface StructuredViewerProps {
   markdown: string | undefined;
+  chapterId: string;
   onRegenerate: () => void;
   isGenerating: boolean;
   hasNote: boolean;
@@ -27,7 +28,7 @@ function saveDownload(blob: Blob, name: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export function StructuredViewer({ markdown, onRegenerate, isGenerating, hasNote }: StructuredViewerProps) {
+export function StructuredViewer({ markdown, chapterId, onRegenerate, isGenerating, hasNote }: StructuredViewerProps) {
   const [view, setView] = useState<View>('split');
 
   async function handleCopy() {
@@ -75,7 +76,7 @@ export function StructuredViewer({ markdown, onRegenerate, isGenerating, hasNote
               <span className="text-muted-foreground text-[10px]">Visualização</span>
             </div>
             {markdown
-              ? <div className="result-content"><MarkdownPreview markdown={markdown} /></div>
+              ? <div className="result-content"><MarkdownPreview markdown={markdown} storageKey={chapterId} /></div>
               : <div className="empty-result">
                   <BookOpen strokeWidth={1} />
                   <span>Seu conhecimento começa com uma nota.</span>

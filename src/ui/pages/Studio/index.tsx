@@ -26,6 +26,7 @@ export function Studio() {
     handleGenerate,
     handleBack,
     handleSelectChapter,
+    noteEditorRef,
   } = useStudioController();
 
   if (isLoadingChapters) {
@@ -96,6 +97,7 @@ export function Studio() {
             {mode === 'notes' && (
               <>
                 <NoteEditor
+                  ref={noteEditorRef}
                   key={currentChapterId}
                   initialContent={note?.content ?? ''}
                   onSave={handleSaveNote}
@@ -112,6 +114,7 @@ export function Studio() {
             {mode === 'result' && (
               <StructuredViewer
                 markdown={structured?.markdownContent}
+                chapterId={currentChapterId}
                 onRegenerate={handleGenerate}
                 isGenerating={isGenerating}
                 hasNote={!!note?.content?.trim()}

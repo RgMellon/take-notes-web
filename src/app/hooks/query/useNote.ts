@@ -8,5 +8,7 @@ export function useNote(chapterId: string) {
     enabled: !!chapterId,
   });
 
-  return { note: data?.note, isLoading, refetch };
+  console.log('[useNote] chapterId:', chapterId, 'data:', data);
+
+  return { note: data, isLoading, refetch };
 }
