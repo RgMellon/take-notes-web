@@ -21,7 +21,7 @@ export const NoteEditor = forwardRef<NoteEditorHandle, NoteEditorProps>(
   useImperativeHandle(ref, () => ({
     async flushSave() {
       if (timer.current) clearTimeout(timer.current);
-      if (pendingContent.current !== null) {
+      if (pendingContent.current !== null && pendingContent.current.trim()) {
         await onSave(pendingContent.current);
         pendingContent.current = null;
       }

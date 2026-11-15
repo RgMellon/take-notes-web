@@ -7,6 +7,7 @@ import { useNote } from '@/app/hooks/query/useNote';
 import { useStructured } from '@/app/hooks/query/useStructured';
 import { useCreateChapter } from '@/app/hooks/mutations/useCreateChapter';
 import { useUpdateChapter } from '@/app/hooks/mutations/useUpdateChapter';
+import { useDeleteChapter } from '@/app/hooks/mutations/useDeleteChapter';
 import { useUpsertNote } from '@/app/hooks/mutations/useUpsertNote';
 import { useGenerateStructured } from '@/app/hooks/mutations/useGenerateStructured';
 import { useUpdateStructured } from '@/app/hooks/mutations/useUpdateStructured';
@@ -29,9 +30,19 @@ export function useStudioController() {
 
   const { createChapter, isLoading: isCreating } = useCreateChapter(bookId);
   const { updateChapter, isLoading: isUpdating } = useUpdateChapter(bookId);
+  const { deleteChapter, isLoading: isDeleting } = useDeleteChapter(bookId);
   const { upsertNote } = useUpsertNote(currentChapterId);
   const { generate, isLoading: isGenerating } = useGenerateStructured(bookId, currentChapterId);
   const { updateStructured, isLoading: isUpdatingStructured } = useUpdateStructured(currentChapterId);
+
+  async function handleDeleteChapter(id: string) {
+    try {
+      await deleteChapter(id);
+      if (selectedChapterId === id) setSelectedChapterId(null);
+    } catch {
+      toast.error('Erro ao excluir capítulo.');
+    }
+  }
 
   async function handleAddChapter() {
     try {
@@ -55,6 +66,7 @@ export function useStudioController() {
   }
 
   async function handleSaveNote(content: string) {
+    if (!content.trim()) return;
     try {
       await upsertNote({ content });
     } catch {
@@ -98,6 +110,8 @@ export function useStudioController() {
     setMode,
     isCreating,
     isUpdating,
+    isDeleting,
+    handleDeleteChapter,
     isGenerating,
     isUpdatingStructured,
     handleUpdateStructured,

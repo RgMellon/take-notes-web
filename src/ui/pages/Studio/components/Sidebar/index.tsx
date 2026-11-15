@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Plus, Search, X } from 'lucide-react';
+import { Plus, Search, Trash2, X } from 'lucide-react';
 import { cn } from '@/app/libs/utils';
 import { Button } from '@/ui/components/ui/button';
+import { DeleteChapterModal } from '../DeleteChapterModal';
+import { useSidebarController } from './useSidebarController';
 import type { Chapter } from '@/app/types/Chapter';
 
 interface SidebarProps {
@@ -10,12 +11,22 @@ interface SidebarProps {
   selectedId: string | null;
   onSelect: (id: string) => void;
   onAdd: () => void;
+  onDelete: (id: string) => Promise<void>;
   isAdding: boolean;
+  isDeleting: boolean;
 }
 
-export function Sidebar({ bookTitle, chapters, selectedId, onSelect, onAdd, isAdding }: SidebarProps) {
-  const [search, setSearch] = useState('');
-  const [showSearch, setShowSearch] = useState(false);
+export function Sidebar({ bookTitle, chapters, selectedId, onSelect, onAdd, onDelete, isAdding, isDeleting }: SidebarProps) {
+  const {
+    search,
+    setSearch,
+    showSearch,
+    setShowSearch,
+    chapterToDelete,
+    setChapterToDelete,
+    handleDeleteClick,
+    handleConfirmDelete,
+  } = useSidebarController({ onDelete, isDeleting });
 
   const filtered = chapters.filter(c =>
     c.title.toLowerCase().includes(search.toLowerCase()),
@@ -63,21 +74,31 @@ export function Sidebar({ bookTitle, chapters, selectedId, onSelect, onAdd, isAd
         )}
 
         {filtered.map(c => (
-          <Button
-            variant="ghost"
-            key={c.id}
-            className={cn('chapter-item', selectedId === c.id && 'selected')}
-            onClick={() => onSelect(c.id)}
-          >
-            <span className="chapter-number">{String(c.number).padStart(2, '0')}</span>
-            <span className="chapter-name">
-              {c.title}
-              <span className={cn('chapter-status', c.status === 'STRUCTURED' && 'ready')}>
-                <i className={cn('status-dot', c.status === 'STRUCTURED' && 'ready')} />
-                {c.status === 'STRUCTURED' ? 'MD otimizado para RAG' : 'Rascunho bruto'}
+          <div key={c.id} className="group relative flex items-center">
+            <Button
+              variant="ghost"
+              className={cn('chapter-item w-full', selectedId === c.id && 'selected')}
+              onClick={() => onSelect(c.id)}
+            >
+              <span className="chapter-number">{String(c.number).padStart(2, '0')}</span>
+              <span className="chapter-name">
+                {c.title}
+                <span className={cn('chapter-status', c.status === 'STRUCTURED' && 'ready')}>
+                  <i className={cn('status-dot', c.status === 'STRUCTURED' && 'ready')} />
+                  {c.status === 'STRUCTURED' ? 'MD otimizado para RAG' : 'Rascunho bruto'}
+                </span>
               </span>
-            </span>
-          </Button>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-1 size-6 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive"
+              onClick={e => handleDeleteClick(e, c)}
+              aria-label={`Excluir ${c.title}`}
+            >
+              <Trash2 className="size-3" />
+            </Button>
+          </div>
         ))}
 
         <Button
@@ -89,6 +110,15 @@ export function Sidebar({ bookTitle, chapters, selectedId, onSelect, onAdd, isAd
           <Plus className="size-3" /> Novo capítulo
         </Button>
       </nav>
+
+      {chapterToDelete && (
+        <DeleteChapterModal
+          chapterTitle={chapterToDelete.title}
+          onClose={() => setChapterToDelete(null)}
+          onConfirm={handleConfirmDelete}
+          isLoading={isDeleting}
+        />
+      )}
     </aside>
   );
 }

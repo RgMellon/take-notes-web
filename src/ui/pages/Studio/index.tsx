@@ -20,6 +20,8 @@ export function Studio() {
     setMode,
     isCreating,
     isUpdating,
+    isDeleting,
+    handleDeleteChapter,
     isGenerating,
     isUpdatingStructured,
     handleUpdateStructured,
@@ -44,7 +46,9 @@ export function Studio() {
         selectedId={currentChapterId}
         onSelect={handleSelectChapter}
         onAdd={handleAddChapter}
+        onDelete={handleDeleteChapter}
         isAdding={isCreating}
+        isDeleting={isDeleting}
       />
 
       <main className="workspace">
