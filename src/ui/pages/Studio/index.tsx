@@ -10,6 +10,7 @@ import { useStudioController } from './useStudioController';
 
 export function Studio() {
   const {
+    book,
     chapters,
     isLoadingChapters,
     currentChapter,
@@ -41,7 +42,7 @@ export function Studio() {
   return (
     <div className="studio">
       <Sidebar
-        bookTitle="Meu livro"
+        bookTitle={book?.title ?? 'Carregando…'}
         chapters={chapters}
         selectedId={currentChapterId}
         onSelect={handleSelectChapter}

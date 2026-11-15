@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
+import { useBook } from '@/app/hooks/query/useBook';
 import { useChapters } from '@/app/hooks/query/useChapters';
 import { useNote } from '@/app/hooks/query/useNote';
 import { useStructured } from '@/app/hooks/query/useStructured';
@@ -20,6 +21,7 @@ export function useStudioController() {
   const [mode, setMode] = useState<'notes' | 'flow' | 'result'>('notes');
   const noteEditorRef = useRef<NoteEditorHandle>(null);
 
+  const { book } = useBook(bookId);
   const { chapters, isLoading: isLoadingChapters } = useChapters(bookId);
 
   const currentChapterId = selectedChapterId ?? chapters[0]?.id ?? '';
@@ -101,6 +103,7 @@ export function useStudioController() {
   return {
     bookId,
     chapters,
+    book,
     isLoadingChapters,
     currentChapter,
     currentChapterId,
