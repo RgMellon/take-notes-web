@@ -3,8 +3,10 @@ import { Handle, Position, type NodeProps } from '@xyflow/react';
 function Handles() {
   return (
     <>
-      <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} />
+      <Handle type="target" position={Position.Top} id="top-in" />
+      <Handle type="source" position={Position.Bottom} id="bottom-out" />
+      <Handle type="target" position={Position.Left} id="left-in" />
+      <Handle type="source" position={Position.Right} id="right-out" />
     </>
   );
 }

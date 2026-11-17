@@ -1,4 +1,4 @@
-import { ReactFlow, Controls, Background, BackgroundVariant } from '@xyflow/react';
+import { ReactFlow, Controls, Background, BackgroundVariant, ConnectionMode } from '@xyflow/react';
 import { Check, Copy, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/ui/components/ui/button';
 import { nodeTypes, nodeShapeOptions } from './nodeConfig';
@@ -57,6 +57,7 @@ export function FlowEditor() {
           onConnect={onConnect}
           onNodeClick={(_, node) => handleNodeClick(node.id)}
           onPaneClick={handlePaneClick}
+          connectionMode={ConnectionMode.Loose}
           fitView
         >
           <Controls />

@@ -21,7 +21,7 @@ function Mermaid({ code }: { code: string }) {
     let active = true;
     const decoded = decodeHtmlEntities(code);
     import('mermaid').then(async ({ default: mermaid }) => {
-      mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: 'dark' });
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', theme: 'dark' });
       const result = await mermaid.render(`diagram${id}`, decoded);
       if (active && ref.current) ref.current.innerHTML = result.svg;
     }).catch(() => { if (active) setError(true); });
